@@ -22,7 +22,6 @@ module.exports = function (schema, options) {
 
   var refmodel = mongoose.model(options.ref)
     , refschema = refmodel.schema
-    , rootField = {}
     , field = {}
     , root, path, positional, fields;
 
@@ -48,6 +47,11 @@ module.exports = function (schema, options) {
   }
 
   // append fields to schema
+  if (options.path) {
+    var rootField = {};
+    rootField[options.path] = {};
+    schema.add(rootField);
+  }
 
   fields.forEach(function(name) {
     var type = refschema.paths[name].options.type;

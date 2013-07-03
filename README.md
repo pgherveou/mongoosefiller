@@ -51,8 +51,7 @@ var UserSchema = new Schema({
 var User = mongoose.model('User', UserSchema);
 
 var PostSchema = new Schema({
-  message: {type: String},
-  user: {}
+  message: {type: String}
 });
 
 var Post = mongoose.model('Post', PostSchema);

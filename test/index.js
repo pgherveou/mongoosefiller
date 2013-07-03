@@ -30,8 +30,7 @@ var User = mongoose.model('User', UserSchema);
  */
 
 var PostSchema = new Schema({
-  message: {type: String},
-  user: {}
+  message: {type: String}
 });
 
 PostSchema.plugin(filler, {

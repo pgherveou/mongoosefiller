@@ -26,11 +26,18 @@ options = {
 ```js
 // examples
 
+var UserSchema = new Schema({
+  firstname: {type: String},
+  lastname : {type: String},
+  email    : {type: String}
+});
+
 var PostSchema = new Schema({
   message: {type: String}
 });
 
-// fill path user of Post with data from User
+// add user.firstname, user.lastname, user.email path to schema
+// fill user.* of Post with data from User
 // update Post docs every time a change occur in User doc
 PostSchema.plugin(filler, {
   path: 'user',

@@ -18,6 +18,10 @@
   "author": "Pierre Herveou",
   "license": "BSD",
   "devDependencies": {
-    "mocha": "~1.12.0"
+    "mocha": "1.x",
+    "chai": "1.x"
+  },
+  "dependencies": {
+    "mongoose": "3.x"
   }
 }

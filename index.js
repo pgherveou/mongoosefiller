@@ -23,8 +23,9 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 module.exports = function (schema, options) {
   var root, path;
 
-  // get source model and schema
-  srcmodel = mongoose.model(options.model);
+  // model and schema
+  destmodel = mongoose.model(options.dest);
+  srcmodel = mongoose.model(options.src);
   srcschema = srcmodel.schema;
 
   // get filling path
@@ -40,13 +41,13 @@ module.exports = function (schema, options) {
   if (options.fields) {
     fields = options.fields;
   } else {
-    fields = Object.keys(srcmodel.paths);
+    fields = Object.keys(srcschema.paths);
   }
 
   // append fields to schema
   fields.forEach(function(name) {
     var field = {}
-      , type = srcschema.paths[field].options.type;
+      , type = srcschema.paths[name].options.type;
 
     field[root + name] = type;
     schema.add(field);
@@ -58,7 +59,7 @@ module.exports = function (schema, options) {
      , self = this;
 
     if (!this.isNew) return next();
-    if (id) return next();
+    if (!id) return next();
 
     srcmodel
       .findById(id)
@@ -90,13 +91,13 @@ module.exports = function (schema, options) {
     var conditions = {}
       , updates = {};
 
-    conditions[options.host.pos.replace('.$', '') + '._id'] = this.id;
+    conditions[path] = this.id;
     changed.forEach(function (field) {
-      updates[opts.host.pos + '.' + field] = self.get(field);
+      updates[root + '.' + field] = self.get(field);
     });
 
     // update
-    model.update(conditions, updates, {multi: true}).exec();
+    destmodel.update(conditions, updates, {multi: true}).exec();
 
     // call next async
     next();

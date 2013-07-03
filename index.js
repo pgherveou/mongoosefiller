@@ -94,7 +94,7 @@ module.exports = function (schema, options) {
       , updates = {};
 
     if (pos)
-      conditions[pos.replace('.$', '') + path] = this.id;
+      conditions[pos.replace('.$', '') + '_id'] = this.id;
     else
       conditions[path] = this.id;
 

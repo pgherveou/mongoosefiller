@@ -20,7 +20,9 @@ options = {
   dest:  String // destination Model name (the one we copy data to)
   fields: Array // (optional default to all) list of fields to copy
 }
+```
 
+```js
 // example
 
 // fill path user of Post with data from User

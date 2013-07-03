@@ -95,6 +95,19 @@ user.set('email', 'otheremail').save()
 
 ```js
 
+var mongoose = require('mongoose')
+  , filler = require('mongoosefiller')
+  , Schema = mongoose.Schema
+  , ObjectId = Schema.Types.ObjectId;
+
+var UserSchema = new Schema({
+  firstname : {type: String},
+  lastname  : {type: String},
+  email     : {type: String}
+});
+
+var User = mongoose.model('User', UserSchema);
+
 var friendSchema = new Schema({
   date: {type: Date}
 });

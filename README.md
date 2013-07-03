@@ -13,6 +13,7 @@ Just like model.populate except that data is stored in the collection instead of
 ## Plugin options
 
 ```js
+// plugin options
 options = {
   path:  String // (optional default to '') path to property to keep in sync with ref model
   pos:   String // (optional) pos operator prefix used to update model in collection array

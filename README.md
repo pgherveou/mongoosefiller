@@ -15,11 +15,40 @@ Just like model.populate except that data is stored in the collection instead of
 ```js
 options = {
   path:  String // (optional default to '') path to property to keep in sync with ref model
-  pos:   String // (optional) positional operator prefix used to update model
+  pos:   String // (optional) pos operator prefix used to update model in collection array
   ref :  String // reference Model name (the one we copy data from)
   dest:  String // destination Model name (the one we copy data to)
   fields: Array // (optional default to all) list of fields to copy
 }
+
+// example
+
+// fill path user of Post with data from User
+// update Post docs every time a change occur in User doc
+PostSchema.plugin(filler, {
+  path: 'user',
+  ref : 'User',
+  dest: 'Post'
+});
+
+
+friendSchema = new Schema({
+  date: {type: Date}
+});
+
+ListSchema = new Schema({
+  name: {type: String},
+  friends: [friendSchema]
+});
+
+// fill friends with data from User
+// update List.friends.$._id every time a change occur in User doc
+friendSchema.plugin(filler, {
+  ref : 'User',
+  dest: 'List',
+  pos : 'friends.$.'
+});
+
 ```
 
 ## Event fill
@@ -113,11 +142,11 @@ var friendSchema = new Schema({
 });
 
 // fill friend with data from User, update List  every time a change occur,
-// use 'friends.$.' positional operator to perform updates
+// use 'friends.$.' pos operator to perform updates
 friendSchema.plugin(filler, {
-  ref       : 'User',
-  dest      : 'List',
-  positional: 'friends.$.'
+  ref : 'User',
+  dest: 'List',
+  pos : 'friends.$.'
 });
 
 var ListSchema = new Schema({

@@ -56,8 +56,7 @@ var PostSchema = new Schema({
 
 var Post = mongoose.model('Post', PostSchema);
 
-// fill path user with data from User
-//update Post model every time a change occur
+// fill path user with data from User, update Post model every time a change occur
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
@@ -79,11 +78,14 @@ Post.create({
 }, function(err, post) {
 
   // user property are set on post doc
-  console.log(post.email) // myemail@gmail.com
-  console.log(post.firstname) // pierre
-
-  // any update on user will trigger an update on the post doc
+  console.log(post.user.email) // myemail@gmail.com
+  console.log(post.user.firstname) // pierre
 });
+
+// later update user
+user.set('email', 'otheremail').save()
+
+// post.user.email is also updated
 
 ```
 
@@ -95,8 +97,7 @@ var friendSchema = new Schema({
   date: {type: Date}
 });
 
-// fill friend with data from User
-// update List  every time a change occur
+// fill friend with data from User, update List  every time a change occur,
 // use 'friends.$.' positional operator to perform updates
 friendSchema.plugin(filler, {
   ref       : 'User',
@@ -121,8 +122,6 @@ List.create({
   // friends property are set on friend sub doc
   console.log(list.friends[0].email) // myemail@gmail.com
   console.log(list.friends[0].firstname) // pierre
-
-  // any update on user will trigger an update on the friend doc
 });
 
 ```

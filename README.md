@@ -2,8 +2,8 @@
 
 denormalization plugin for mongoose
 
-This plugins populate and keep updated references to documents in other
-collection.
+This plugins helps you create denormalized document by copying under the hood references
+from other collection and keeping them up to date.
 
 ## Installation
 

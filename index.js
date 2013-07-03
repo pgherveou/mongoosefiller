@@ -23,7 +23,7 @@ module.exports = function (schema, options) {
   var refmodel = mongoose.model(options.ref)
     , refschema = refmodel.schema
     , field = {}
-    , root, path, positional, fields;
+    , root, path, pos, fields;
 
   // normalize options
 
@@ -35,7 +35,7 @@ module.exports = function (schema, options) {
     root = '';
   }
 
-  if (options.positional) positional = options.positional;
+  if (options.pos) pos = options.pos;
 
   // get filling fields
 
@@ -93,14 +93,14 @@ module.exports = function (schema, options) {
     var conditions = {}
       , updates = {};
 
-    if (positional)
-      conditions[positional.replace('.$', '') + path] = this.id;
+    if (pos)
+      conditions[pos.replace('.$', '') + path] = this.id;
     else
       conditions[path] = this.id;
 
     changed.forEach(function (field) {
-      if (positional)
-        updates[positional + field] = self.get(field);
+      if (pos)
+        updates[pos + field] = self.get(field);
       else
         updates[root + field] = self.get(field);
     });

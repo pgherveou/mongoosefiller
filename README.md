@@ -72,7 +72,6 @@ friendSchema.plugin(filler, {
 - Embedded array check examples/friends.js
 - Embedded doc   check examples/post.js
 
-
 ## Custom Schema event
 
 a `fill` event is triggered on the denormalized schema when the the ref doc change and collection is updated
@@ -85,9 +84,6 @@ PostSchema.on('fill', function(user) {
 
 ```
 
-
-
-```
 ## perf
 
 I have done a basic test on one doc

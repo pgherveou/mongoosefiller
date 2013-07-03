@@ -2,8 +2,7 @@
 
 denormalization plugin for mongoose
 
-This plugins helps you create denormalized document by copying under the hood references
-from other collection and keeping them up to date.
+This plugins helps you create denormalized schemas by copying references from other collection and keeping them up to date.
 
 ## Installation
 
@@ -21,7 +20,7 @@ options = {
 }
 ```
 
-## Events fill
+## Event fill
 
 a fill event is triggered on the denormalized schema when the the ref doc change and collection is updated
 

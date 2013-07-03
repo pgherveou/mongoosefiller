@@ -20,15 +20,17 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
  * @api public
  */
 
+
 module.exports = function (schema, options) {
-  var root, path;
 
-  // model and schema
-  destmodel = mongoose.model(options.dest);
-  srcmodel = mongoose.model(options.src);
-  srcschema = srcmodel.schema;
+  var srcmodel = mongoose.model(options.src)
+    , srcschema = srcmodel.schema
+    , rootField = {}
+    , field = {}
+    , root, path, prefix, fields;
 
-  // get filling path
+  // normalize options
+
   if (options.path) {
     root = options.path + '.';
     path = root + '_id';
@@ -37,23 +39,26 @@ module.exports = function (schema, options) {
     root = '';
   }
 
+  if (options.prefix) prefix = options.prefix;
+
   // get filling fields
+
   if (options.fields) {
     fields = options.fields;
   } else {
-    fields = Object.keys(srcschema.paths);
+    fields = Object.keys(srcschema.paths)
+      .filter(function (f) {return f !== '__v';});
   }
 
   // append fields to schema
   fields.forEach(function(name) {
-    var field = {}
-      , type = srcschema.paths[name].options.type;
-
-    field[root + name] = type;
+    var type = srcschema.paths[name].options.type;
+    field[root + name] = {type: type};
     schema.add(field);
   });
 
   // fetch source and fill on save
+
   schema.pre('save', function (next) {
     var id = this.get(path)
      , self = this;
@@ -73,6 +78,7 @@ module.exports = function (schema, options) {
   });
 
   // update all denormalized references when source is updated
+
   srcschema.pre('save', function (next) {
     var self = this;
 
@@ -91,13 +97,20 @@ module.exports = function (schema, options) {
     var conditions = {}
       , updates = {};
 
-    conditions[path] = this.id;
+    if (prefix)
+      conditions[prefix.replace('.$', '') + path] = this.id;
+    else
+      conditions[path] = this.id;
+
     changed.forEach(function (field) {
-      updates[root + '.' + field] = self.get(field);
+      if (prefix)
+        updates[prefix + field] = self.get(field);
+      else
+        updates[root + field] = self.get(field);
     });
 
     // update
-    destmodel.update(conditions, updates, {multi: true}).exec();
+    mongoose.model(options.dest).update(conditions, updates, {multi: true}).exec();
 
     // call next async
     next();

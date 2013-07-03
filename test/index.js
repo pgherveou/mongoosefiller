@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
  */
 
 mongoose.set('debug', true);
-mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
+conn = mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
   if (err) throw err;
 });
 
@@ -31,16 +31,10 @@ var User = mongoose.model('User', UserSchema);
 
 var PostSchema = new Schema({
   message: {type: String},
-  user: {
-    _id: {type: ObjectId, ref: 'User'}
-  }
+  user: {}
 });
 
 var Post = mongoose.model('Post', PostSchema);
-
-/**
- * Apply plugin
- */
 
 PostSchema.plugin(filler, {
   path: 'user',
@@ -48,25 +42,50 @@ PostSchema.plugin(filler, {
   dest: 'Post'
 });
 
-var user, post;
+/**
+ * friend schema
+ */
+
+var friendSchema = new Schema({
+  date: {type: Date}
+});
+
+friendSchema.plugin(filler, {
+  src   : 'User',
+  dest  : 'List',
+  prefix: 'friends.$.'
+});
+
+
+/**
+ * list schema
+ */
+
+var ListSchema = new Schema({
+  name: {type: String},
+  friends: [friendSchema]
+});
+
+var List = mongoose.model('List', ListSchema);
+
+
+
+
+var list, user, post;
 
 describe('mongoosefiller', function() {
 
   before(function (done) {
     user = new User({
-      firstname : 'pierre',
-      lastname  : 'herveou',
-      email     : 'myemail@gmail.com'
+      firstname: 'pierre',
+      lastname : 'herveou',
+      email    : 'myemail@gmail.com'
     });
     user.save(done);
   });
 
   // after(function (done) {
-  //   User.remove(function() {
-  //     Post.remove(function () {
-  //       mongoose.disconnect();
-  //     });
-  //   });
+  //   conn.connection.db.dropDatabase(done);
   // });
 
   it('should populate post.user', function (done) {
@@ -82,16 +101,47 @@ describe('mongoosefiller', function() {
     });
   });
 
-  it('should update post when user is updated', function () {
+  it('should update post when user is updated', function (done) {
     user.email = 'myotheremail@gmail.com';
-    user.save(function () {
-
-      Post.findbyId(post.id, function (err, post) {
+    user.save();
+    setTimeout(function () {
+      Post.findById(post.id, function (err, post) {
+        expect(err).to.be.ko;
+        expect(post.user).to.be.an('object');
         expect(post.user.email).to.eq(user.email);
         done();
       });
+    }, 10);
+  });
 
+  it('should populate list.friends', function (done) {
+    list = new List({
+      name: 'list-1',
+      friends: [
+        {_id: user.id, date: Date.now()}
+      ]
     });
+
+    list.save(function (err) {
+      expect(err).to.be.ko;
+      expect(list.friends[0]).to.be.ok;
+      expect(list.friends[0].email).to.eq(user.email);
+      expect(list.friends[0].firstname).to.eq(user.firstname);
+      done();
+    });
+
+  });
+
+  it('should update post when user is updated', function (done) {
+    user.email = 'mythirdemail@gmail.com';
+    user.save();
+    setTimeout(function () {
+      List.findById(list.id, function (err, list) {
+        expect(err).to.be.ko;
+        expect(list.friends[0].email).to.eq(user.email);
+        done();
+      });
+    }, 10);
 
   });
 

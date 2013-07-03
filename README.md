@@ -38,10 +38,6 @@ PostSchema.on('fill', function(user) {
 
 ```js
 
-/**
- * sample schemas
- */
-
 var mongoose = require('mongoose')
   , filler = require('mongoosefiller')
   , Schema = mongoose.Schema

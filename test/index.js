@@ -8,7 +8,7 @@ var mongoose = require('mongoose')
  * connect db
  */
 
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 conn = mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
   if (err) throw err;
 });
@@ -34,13 +34,14 @@ var PostSchema = new Schema({
   user: {}
 });
 
-var Post = mongoose.model('Post', PostSchema);
-
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
   dest: 'Post'
 });
+
+var Post = mongoose.model('Post', PostSchema);
+
 
 /**
  * friend schema
@@ -68,9 +69,6 @@ var ListSchema = new Schema({
 
 var List = mongoose.model('List', ListSchema);
 
-
-
-
 var list, user, post;
 
 describe('mongoosefiller', function() {
@@ -84,9 +82,9 @@ describe('mongoosefiller', function() {
     user.save(done);
   });
 
-  // after(function (done) {
-  //   conn.connection.db.dropDatabase(done);
-  // });
+  after(function (done) {
+    conn.connection.db.dropDatabase(done);
+  });
 
   it('should populate post.user', function (done) {
     post = new Post({

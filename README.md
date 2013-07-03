@@ -9,7 +9,7 @@ collection.
 
     $ npm install mongoosefiller
 
-## Options
+## Plugin options
 
 ```js
 options = {

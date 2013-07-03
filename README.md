@@ -44,7 +44,8 @@ ListSchema = new Schema({
 });
 
 // fill friends with data from User
-// update List.friends.$._id every time a change occur in User doc
+// update friend (using positional operator List.friends.$._id)
+// every time a change occur in User doc
 friendSchema.plugin(filler, {
   ref : 'User',
   dest: 'List',

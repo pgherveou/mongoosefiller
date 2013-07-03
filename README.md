@@ -31,7 +31,6 @@ PostSchema.plugin(filler, {
   dest: 'Post'
 });
 
-
 friendSchema = new Schema({
   date: {type: Date}
 });

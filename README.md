@@ -38,7 +38,7 @@ PostSchema.on('fill', function(user) {
 
 ```js
 
-/
+/**
  * sample schemas
  */
 

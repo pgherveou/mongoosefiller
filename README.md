@@ -21,6 +21,18 @@ options = {
 }
 ```
 
+## Events fill
+
+a fill event is triggered on the denormalized schema when the the ref doc change and collection is updated
+
+```js
+user.set('name', 'new-name').save();
+PostSchema.on('fill', function(user) {
+
+});
+
+```
+
 ## Example embedded object
 
 

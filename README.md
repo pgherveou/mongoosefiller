@@ -12,11 +12,11 @@
 options = {
   path: String   // path to property to keep in sync with ref model
   positional: String // positional operator prefix used to update model
-  ref : String // reference Model name
-  dest: String // destination Model name
+  ref : String // reference Model name (the one we copy data from)
+  dest: String // destination Model name (the one we copy data to)
   fields: Array // list of fields to copy
 }
-
+```
 
 ## Example embedded object
 

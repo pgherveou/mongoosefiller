@@ -187,9 +187,13 @@ List.create({
 ```
 ## perf
 
-I have done a basic test on a list of friends with 1000 embedded users
-- read perfs for 1 one doc using embedded friends : 94ms
-- read perfs for 1 one doc using mongoose populate: 254ms
+I have done a basic test on one doc
+- read perfs for with 10 embedded friends: 5ms
+- read perfs for with 10 populated friends: 16ms
+- read perfs for with 100 embedded friends: 36ms
+- read perfs for with 100 populated friends: 67ms
+- read perfs for with 1000 embedded friends: 94ms
+- read perfs for with 1000 populated friends: 254ms
 
 ## License
 

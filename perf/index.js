@@ -47,7 +47,7 @@ var List = mongoose.model('List', ListSchema);
 //   , users = []
 //   , user = null;
 
-// while (i++ <= 1000) {
+// while (i++ < 10) {
 //   user = new User({
 //     firstname: 'firstname-' + i,
 //     lastname: 'lastname-' + i,
@@ -71,20 +71,22 @@ var List = mongoose.model('List', ListSchema);
 //   }).save();
 // }, 2000);
 
+List.findOne(function (err, list) {
+  var id = list.id;
 
-console.time('filled-time');
-List.findById('51d45f27cbdddf8aa60003ea', function (err, list) {
-  console.timeEnd('filled-time');
+  console.time('populate-time');
+  List.findById(id)
+    .select('name friends._id')
+    .populate({path: 'friends._id', model: 'User'})
+    .exec(function (err, list) {
+      console.timeEnd('populate-time');
+  });
+
+  console.time('filled-time');
+  List.findById(id, function (err, list) {
+    console.timeEnd('filled-time');
+  });
+
 });
 
-console.time('populate-time');
-List.findById('51d45f27cbdddf8aa60003ea')
-  .select('name friends._id')
-  .populate({path: 'friends._id', model: 'User'})
-  .exec(function (err, list) {
-    console.timeEnd('populate-time');
-});
 
-
-// filled-time: 94ms
-// populate-time: 254ms

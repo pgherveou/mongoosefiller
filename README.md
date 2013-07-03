@@ -47,6 +47,8 @@ var PostSchema = new Schema({
 
 var Post = mongoose.model('Post', PostSchema);
 
+// fill path **user** with data from **User** ref collection
+//update **Model** dest collection every time a change occur
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',

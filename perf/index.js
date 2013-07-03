@@ -80,6 +80,7 @@ List.findOne(function (err, list) {
     .populate({path: 'friends._id', model: 'User'})
     .exec(function (err, list) {
       console.timeEnd('populate-time');
+      console.log(list.toJSON());
   });
 
   console.time('filled-time');

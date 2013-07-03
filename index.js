@@ -50,6 +50,7 @@ module.exports = function (schema, options) {
   fields.forEach(function(name) {
     var type = refschema.paths[name].options.type;
     field[root + name] = {type: type};
+    if (name === '_id') field[root + name].ref = options.ref;
     schema.add(field);
   });
 

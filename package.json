@@ -1,6 +1,6 @@
 {
   "name": "mongoosefiller",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "mongoose plugin, populate and keep updated references to documents in other collection.",
   "main": "index.js",
   "scripts": {

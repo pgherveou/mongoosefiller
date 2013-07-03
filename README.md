@@ -12,11 +12,11 @@ This plugins helps you create denormalized schemas by copying references from ot
 
 ```js
 options = {
-  path:  String // path to property to keep in sync with ref model
-  pos:   String // positional operator prefix used to update model
+  path:  String // (optional default to '') path to property to keep in sync with ref model
+  pos:   String // (optional) positional operator prefix used to update model
   ref :  String // reference Model name (the one we copy data from)
   dest:  String // destination Model name (the one we copy data to)
-  fields: Array // list of fields to copy
+  fields: Array // (optional default to all) list of fields to copy
 }
 ```
 

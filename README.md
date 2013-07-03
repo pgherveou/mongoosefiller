@@ -54,6 +54,7 @@ ListSchema = new Schema({
   friends: [friendSchema]
 });
 
+// add firstname, lastname, email path to schema
 // fill friends with data from User
 // update friend (using positional operator List.friends.$._id)
 // every time a change occur in User doc

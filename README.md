@@ -79,7 +79,7 @@ a `fill` event is triggered on the denormalized schema when the the ref doc chan
 ```js
 user.set('name', 'new-name').save();
 PostSchema.on('fill', function(user) {
-
+  // all post docs have have been saved
 });
 
 ```

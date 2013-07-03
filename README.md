@@ -26,6 +26,10 @@ options = {
 ```js
 // examples
 
+var PostSchema = new Schema({
+  message: {type: String}
+});
+
 // fill path user of Post with data from User
 // update Post docs every time a change occur in User doc
 PostSchema.plugin(filler, {

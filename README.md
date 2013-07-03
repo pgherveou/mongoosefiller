@@ -185,7 +185,11 @@ List.create({
 });
 
 ```
+## perf
 
+I have done a basic test on a list of friends with 1000 embedded users
+- read perfs for 1 one doc filled collection: 94ms
+- read perfs for 1 one doc using populate   : 254ms
 
 ## License
 

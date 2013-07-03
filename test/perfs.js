@@ -79,12 +79,11 @@ List.findById('51d45f27cbdddf8aa60003ea', function (err, list) {
 
 console.time('populate-time');
 List.findById('51d45f27cbdddf8aa60003ea')
-  .select('name friends._id')
   .populate({path: 'friends._id', model: 'User'})
   .exec(function (err, list) {
     console.timeEnd('populate-time');
 });
 
 
-// filled-time: 94ms
-// populate-time: 254ms
+// filled-time: 89ms
+// populate-time: 268ms

@@ -103,6 +103,8 @@ var ListSchema = new Schema({
   friends: [friendSchema]
 });
 
+var List = mongoose.model('List', ListSchema);
+
 List.create({
   name: 'list-1',
   friends: [

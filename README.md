@@ -47,8 +47,8 @@ var PostSchema = new Schema({
 
 var Post = mongoose.model('Post', PostSchema);
 
-// fill path **user** with data from **User** ref collection
-//update **Model** dest collection every time a change occur
+// fill path **user** with data from **User**
+//update **Post** model every time a change occur
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
@@ -74,7 +74,6 @@ Post.create({
   console.log(post.firstname) // pierre
 
   // any update on user will trigger an update on the post doc
-
 });
 
 ```
@@ -87,6 +86,9 @@ var friendSchema = new Schema({
   date: {type: Date}
 });
 
+// fill friend with data from **User**
+// update **List**  every time a change occur
+// use 'friends.$.' positional operator to perform updates
 friendSchema.plugin(filler, {
   ref       : 'User',
   dest      : 'List',
@@ -110,8 +112,6 @@ List.create({
   console.log(list.friends[0].firstname) // pierre
 
   // any update on user will trigger an update on the friend doc
-
-
 });
 
 

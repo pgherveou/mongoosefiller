@@ -47,12 +47,6 @@ module.exports = function (schema, options) {
   }
 
   // append fields to schema
-  if (options.path) {
-    var rootField = {};
-    rootField[options.path] = {};
-    schema.add(rootField);
-  }
-
   fields.forEach(function(name) {
     var type = refschema.paths[name].options.type;
     field[root + name] = {type: type};

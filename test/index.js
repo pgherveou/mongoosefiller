@@ -90,6 +90,7 @@ describe('mongoosefiller', function() {
       message: "some message"
     });
     post.save(function() {
+      console.log(post.user);
       expect(post.user).to.be.an('object');
       expect(post.user.email).to.eq(user.email);
       expect(post.user.firstname).to.eq(user.firstname);

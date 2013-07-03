@@ -1,6 +1,9 @@
 # mongoosefiller
 
-  denormalization plugin for mongoose
+denormalization plugin for mongoose
+
+This plugins populate and keep updated references to documents in other
+collection.
 
 ## Installation
 

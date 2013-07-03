@@ -23,7 +23,7 @@ module.exports = function (schema, options) {
   var refmodel = mongoose.model(options.ref)
     , refschema = refmodel.schema
     , field = {}
-    , root, path, pos, fields;
+    , root, path, pos, fields, rootEl, el = {};
 
   // normalize options
 
@@ -47,12 +47,21 @@ module.exports = function (schema, options) {
   }
 
   // append fields to schema
+
+  if (options.path) {
+    rootEl = {};
+    rootEl[options.path] = el;
+  } else {
+    rootEl = el;
+  }
+
   fields.forEach(function(name) {
     var type = refschema.paths[name].options.type;
-    field[root + name] = {type: type};
-    if (name === '_id') field[root + name].ref = options.ref;
-    schema.add(field);
+    el[name] = {type: type};
+    if (name === '_id') el[name].ref = options.ref;
   });
+
+  schema.add(rootEl);
 
   // fetch source and fill on save
 
@@ -67,6 +76,7 @@ module.exports = function (schema, options) {
       .findById(id)
       .select(fields.join(' '))
       .exec(function (err, model) {
+        if (!model) return;
         fields.forEach(function (field) {
           self.set(root + field, model[field]);
         });

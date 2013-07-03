@@ -101,14 +101,14 @@ var PostSchema = new Schema({
   message: {type: String}
 });
 
-var Post = mongoose.model('Post', PostSchema);
-
 // fill path user with data from User, update Post model every time a change occur
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
   dest: 'Post'
 });
+
+var Post = mongoose.model('Post', PostSchema);
 
 // save a user
 var user = new User({

@@ -57,7 +57,6 @@ friendSchema.plugin(filler, {
   positional: 'friends.$.'
 });
 
-
 /**
  * list schema
  */
@@ -102,14 +101,14 @@ describe('mongoosefiller', function() {
   it('should update post when user is updated', function (done) {
     user.email = 'myotheremail@gmail.com';
     user.save();
-    setTimeout(function () {
+    PostSchema.once('fill', function () {
       Post.findById(post.id, function (err, post) {
         expect(err).to.be.ko;
         expect(post.user).to.be.an('object');
         expect(post.user.email).to.eq(user.email);
         done();
       });
-    }, 10);
+    });
   });
 
   it('should populate list.friends', function (done) {
@@ -133,13 +132,16 @@ describe('mongoosefiller', function() {
   it('should update post when user is updated', function (done) {
     user.email = 'mythirdemail@gmail.com';
     user.save();
-    setTimeout(function () {
+
+    friendSchema.once('fill', function () {
       List.findById(list.id, function (err, list) {
         expect(err).to.be.ko;
         expect(list.friends[0].email).to.eq(user.email);
         done();
       });
-    }, 10);
+    });
+
+
 
   });
 

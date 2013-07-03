@@ -107,11 +107,14 @@ module.exports = function (schema, options) {
         updates[root + field] = self.get(field);
     });
 
-    // update
-    mongoose.model(options.dest).update(conditions, updates, {multi: true}).exec();
-
-    // call next async
+    // call next, to save changes
     next();
+
+    // trigger updates
+    mongoose.model(options.dest).update(conditions, updates, {multi: true}).exec(function () {
+      schema.emit('fill', self);
+    });
+
   });
 
 };

@@ -4,6 +4,8 @@ denormalization plugin for mongoose
 
 This plugins helps you create denormalized schemas by copying references from other collection and keeping them up to date.
 
+Just like model.populate except that data are stored in mongo instead of being populated for each query
+
 ## Installation
 
     $ npm install mongoosefiller

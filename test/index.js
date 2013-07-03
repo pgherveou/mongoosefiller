@@ -38,7 +38,7 @@ var Post = mongoose.model('Post', PostSchema);
 
 PostSchema.plugin(filler, {
   path: 'user',
-  src : 'User',
+  ref : 'User',
   dest: 'Post'
 });
 
@@ -51,9 +51,9 @@ var friendSchema = new Schema({
 });
 
 friendSchema.plugin(filler, {
-  src   : 'User',
-  dest  : 'List',
-  prefix: 'friends.$.'
+  ref       : 'User',
+  dest      : 'List',
+  positional: 'friends.$.'
 });
 
 

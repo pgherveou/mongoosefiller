@@ -12,8 +12,8 @@
 options = {
   path: String   // path to property to keep in sync with ref model
   positional: String // positional operator prefix used to update model
-  ref : String // ref Model name
-  dest: String // des Model name
+  ref : String // reference Model name
+  dest: String // destination Model name
   fields: Array // list of fields to copy
 }
 

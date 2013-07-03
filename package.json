@@ -16,7 +16,7 @@
     "schema"
   ],
   "author": "Pierre Herveou",
-  "license": "BSD",
+  "license": "MIT",
   "devDependencies": {
     "mocha": "1.x",
     "chai": "1.x"

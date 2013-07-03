@@ -37,8 +37,8 @@ var PostSchema = new Schema({
 });
 
 // add user.firstname, user.lastname, user.email path to schema
-// fill user.* of Post with data from User
-// update Post docs every time a change occur in User doc
+// fill user.* with data from User
+// update documents every time a change occur in User
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
@@ -56,8 +56,8 @@ ListSchema = new Schema({
 
 // add firstname, lastname, email path to schema
 // fill friends with data from User
-// update friend (using positional operator List.friends.$._id)
-// every time a change occur in User doc
+// update friends in List (using positional operator List.friends.$._id)
+// every time a change occur in User
 friendSchema.plugin(filler, {
   ref : 'User',
   dest: 'List',

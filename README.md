@@ -15,11 +15,11 @@ Just like model.populate except that data is stored in the collection instead of
 ```js
 // plugin options
 options = {
-  path:  String // (optional default to '') path to property to keep in sync with ref model
-  pos:   String // (optional) pos operator prefix used to update model in collection array
-  ref :  String // reference Model name (the one we copy data from)
-  dest:  String // destination Model name (the one we copy data to)
-  fields: Array // (optional default to all) list of fields to copy
+  path:   String // (optional default to '') path to property to keep in sync with ref model
+  pos:    String // (optional) pos operator prefix used to update model in collection array
+  ref :   String // reference Model name (the one we copy data from)
+  dest:   String // destination Model name (the one we copy data to)
+  select: String // (optional default to all) list of fields separated by space to embed
 }
 ```
 
@@ -54,14 +54,15 @@ ListSchema = new Schema({
   friends: [friendSchema]
 });
 
-// add firstname, lastname, email path to schema
+// add firstname, lastname path to schema
 // fill friends with data from User
 // update friends in List (using positional operator List.friends.$._id)
 // every time a change occur in User
 friendSchema.plugin(filler, {
-  ref : 'User',
-  dest: 'List',
-  pos : 'friends.$.'
+  ref   : 'User',
+  dest  : 'List',
+  pos   : 'friends.$.',
+  select: 'firstname lastname'
 });
 
 ```

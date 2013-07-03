@@ -53,7 +53,8 @@ var friendSchema = new Schema({
 friendSchema.plugin(filler, {
   ref : 'User',
   dest: 'List',
-  pos : 'friends.$.'
+  pos : 'friends.$.',
+  select: 'firstname email'
 });
 
 /**

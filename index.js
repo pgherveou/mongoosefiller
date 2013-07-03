@@ -39,8 +39,8 @@ module.exports = function (schema, options) {
 
   // get filling fields
 
-  if (options.fields) {
-    fields = options.fields;
+  if (options.select) {
+    fields = options.select.split(' ');
   } else {
     fields = Object.keys(refschema.paths)
       .filter(function (f) {return f !== '__v';});

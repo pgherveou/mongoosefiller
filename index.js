@@ -10,7 +10,6 @@ var mongoose = require('mongoose');
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
-
 /**
  * @param  {Schema} schema
  * @param  {Object} options

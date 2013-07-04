@@ -41,6 +41,7 @@ module.exports = function (schema, options) {
 
   if (options.select) {
     fields = options.select.split(' ');
+    fields.push('_id');
   } else {
     fields = Object.keys(refschema.paths)
       .filter(function (f) {return f !== '__v';});

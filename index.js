@@ -30,6 +30,13 @@ module.exports = function (schema, options) {
   if (options.path) {
     root = options.path + '.';
     path = root + '_id';
+
+    // add virtual id path
+    schema.virtual(options.path + '.id').get(function () {
+      var _id = this.get(options.path + '._id');
+      if (_id) return _id.toString();
+    });
+
   } else {
     path = '_id';
     root = '';
@@ -79,7 +86,7 @@ module.exports = function (schema, options) {
       .exec(function (err, model) {
         if (!model) return;
         fields.forEach(function (field) {
-          self.set(root + field, model[field]);
+          self.set(root + field, model.get(field));
         });
         next();
       });

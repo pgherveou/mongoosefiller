@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
   , ObjectId = Schema.Types.ObjectId;
 
 // connect
-mongoose.set('debug', false);
+mongoose.set('debug', true);
 
 conn = mongoose.connect('mongodb://localhost/mongoosefiller-post', function (err) {
   if (err) throw err;
@@ -13,7 +13,11 @@ conn = mongoose.connect('mongodb://localhost/mongoosefiller-post', function (err
 var UserSchema = new Schema({
   firstname: {type: String},
   lastname : {type: String},
-  email    : {type: String}
+  email    : {type: String},
+  pictures : {
+    50: {type: String},
+    100: {type: String}
+  }
 });
 
 var User = mongoose.model('User', UserSchema);
@@ -34,7 +38,11 @@ var Post = mongoose.model('Post', PostSchema);
 var user = new User({
   firstname: 'pierre',
   lastname : 'herveou',
-  email    : 'myemail@gmail.com'
+  email    : 'myemail@gmail.com',
+  pictures : {
+    50: 'pic-50.jpg',
+    100: 'pic-100.jpg'
+  }
 });
 
 user.save(function () {
@@ -43,6 +51,7 @@ user.save(function () {
     message: "some message"
   }, function(err, post) {
     console.log("saved: ", post);
+    console.log(post.user.id);
   });
 });
 

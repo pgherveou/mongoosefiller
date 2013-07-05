@@ -72,6 +72,7 @@ friendSchema.plugin(filler, {
 - Embedded array check examples/friends.js
 - Embedded doc   check examples/post.js
 
+
 ## Custom Schema event
 
 a `fill` event is triggered on the denormalized schema when the the ref doc change and collection is updated
@@ -81,6 +82,25 @@ user.set('name', 'new-name').save();
 PostSchema.on('fill', function(user) {
   // all post docs have have been saved
 });
+```
+
+## Custom id virtual path
+
+if you define a path attribute, like in the following example, the plugin will create a virtual id accessor
+
+```js
+PostSchema.plugin(filler, {
+  path: 'user',
+  ref : 'User',
+  dest: 'Post'
+});
+
+// ...
+
+Post.create(doc, function(err, post) {
+  console.log(post.user.id == post.user._id.toString());
+});
+
 
 ```
 

@@ -107,13 +107,12 @@ Post.create(doc, function(err, post) {
 ## perf
 
 I have done a basic test on one doc
-- read perfs for with 10 embedded friends: 5ms
-- read perfs for with 10 populated friends: 16ms
-- read perfs for with 100 embedded friends: 36ms
-- read perfs for with 100 populated friends: 67ms
-- read perfs for with 1000 embedded friends: 94ms
-- read perfs for with 1000 populated friends: 254ms
-
+- read perfs with 10 embedded friends: 5ms
+- read perfs with 10 populated friends: 16ms
+- read perfs with 100 embedded friends: 36ms
+- read perfs with 100 populated friends: 67ms
+- read perfs with 1000 embedded friends: 94ms
+- read perfs with 1000 populated friends: 254m
 ## License
 
   MIT

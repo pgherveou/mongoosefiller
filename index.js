@@ -10,6 +10,37 @@ var mongoose = require('mongoose');
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
+
+/**
+ * select fields from an array of string mongoose style
+ *
+ * @param  {Array}  ref    reference array
+ * @param  {String} select field to filter from orignial array
+ * @return {Array}         filtered list of fields
+ *
+ * @api private
+ */
+
+var selectFields = function (ref, select) {
+  var fields;
+  if (!select) return ref;
+
+  // select is of type -fied1 -field2
+  if (select[0] === '-') {
+    var removes = select.split(' ');
+    fields = ref.slice(0);
+    removes.forEach(function (remove) {
+      fields.splice(fields.indexOf(remove.slice(1)), 1);
+    });
+    return fields;
+  } else {
+    // select is of type fied1 field2
+    return select.split(' ');
+  }
+};
+
+
+
 /**
  * @param  {Schema} schema
  * @param  {Object} options
@@ -23,7 +54,7 @@ module.exports = function (schema, options) {
   var refmodel = mongoose.model(options.ref)
     , refschema = refmodel.schema
     , field = {}
-    , root, path, pos, fields, rootEl, el = {};
+    , root, path, pos, sync, fields, rootEl, el = {};
 
   // normalize options
 
@@ -44,15 +75,9 @@ module.exports = function (schema, options) {
 
   if (options.pos) pos = options.pos;
 
-  // get filling fields
-
-  if (options.select) {
-    fields = options.select.split(' ');
-    fields.push('_id');
-  } else {
-    fields = Object.keys(refschema.paths)
-      .filter(function (f) {return f !== '__v';});
-  }
+  // select fields to copy
+  fields = selectFields(Object.keys(refschema.paths), options.select);
+  if (~fields.indexOf('_id')) fields.push('_id');
 
   // append fields to schema
 
@@ -92,6 +117,9 @@ module.exports = function (schema, options) {
       });
   });
 
+  // get fields to get in sync
+  sync = selectFields(fields, options.sync);
+
   // update all denormalized references when source is updated
 
   refschema.pre('save', function (next) {
@@ -101,7 +129,7 @@ module.exports = function (schema, options) {
     if (this.isNew) return next();
 
     // get updated fields
-    var changed = fields.filter(function (field) {
+    var changed = sync.filter(function (field) {
       return self.isDirectModified(field);
     });
 

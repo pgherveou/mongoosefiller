@@ -19,7 +19,8 @@ options = {
   pos:    String // (optional) pos operator prefix used to update model in collection array
   ref :   String // reference Model name (the one we copy data from)
   dest:   String // destination Model name (the one we copy data to)
-  select: String // (optional default to all) list of fields separated by space to embed
+  select: String // (optional) list of fields separated by space to embed (same style as mongoose select)
+  sync:   String // (optional) list of fields we want to keep in sync after first save. (same style as mongoose select)
 }
 ```
 

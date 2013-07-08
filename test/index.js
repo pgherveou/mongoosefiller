@@ -4,6 +4,8 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = Schema.Types.ObjectId;
 
+// mongoose.set('debug', true);
+
 /**
  * connect db
  */
@@ -20,7 +22,8 @@ conn = mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
 var UserSchema = new Schema({
   firstname : {type: String},
   lastname  : {type: String},
-  email     : {type: String}
+  email     : {type: String},
+  avatar    : {type: String}
 });
 
 var User = mongoose.model('User', UserSchema);
@@ -36,7 +39,8 @@ var PostSchema = new Schema({
 PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
-  dest: 'Post'
+  dest: 'Post',
+  sync: '-avatar'
 });
 
 var Post = mongoose.model('Post', PostSchema);
@@ -76,7 +80,8 @@ describe('mongoosefiller', function() {
     user = new User({
       firstname: 'pierre',
       lastname : 'herveou',
-      email    : 'myemail@gmail.com'
+      email    : 'myemail@gmail.com',
+      avatar   : 'avatar1.png'
     });
     user.save(done);
   });
@@ -126,7 +131,6 @@ describe('mongoosefiller', function() {
       expect(list.friends[0].firstname).to.eq(user.firstname);
       done();
     });
-
   });
 
   it('should update post when user is updated', function (done) {
@@ -140,9 +144,21 @@ describe('mongoosefiller', function() {
         done();
       });
     });
+  });
 
+  it('should not update field that we dont want to sync', function (done) {
+    user.email = 'myfourthemail@gmail.com';
+    user.avatar = 'avatar2.png';
+    user.save();
 
-
+    PostSchema.once('fill', function () {
+      Post.findById(post.id, function (err, post) {
+        expect(err).to.be.ko;
+        expect(post.user.email).to.eq(user.email);
+        expect(post.user.avatar).to.eq('avatar1.png');
+        done();
+      });
+    });
   });
 
 

@@ -77,7 +77,7 @@ module.exports = function (schema, options) {
 
   // select fields to copy
   fields = selectFields(Object.keys(refschema.paths), options.select);
-  if (~fields.indexOf('_id')) fields.push('_id');
+  if (!~fields.indexOf('_id')) fields.push('_id');
 
   // append fields to schema
 

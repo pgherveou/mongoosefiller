@@ -40,6 +40,7 @@ PostSchema.plugin(filler, {
   path: 'user',
   ref : 'User',
   dest: 'Post',
+  select: 'firstname lastname email avatar',
   sync: '-avatar'
 });
 
@@ -97,6 +98,7 @@ describe('mongoosefiller', function() {
     });
     post.save(function() {
       expect(post.user).to.be.an('object');
+      expect(post.user.id).to.eq(user.id);
       expect(post.user.email).to.eq(user.email);
       expect(post.user.firstname).to.eq(user.firstname);
       done();
@@ -127,6 +129,7 @@ describe('mongoosefiller', function() {
     list.save(function (err) {
       expect(err).to.be.ko;
       expect(list.friends[0]).to.be.ok;
+      expect(list.friends[0].id).to.eq(user.id);
       expect(list.friends[0].email).to.eq(user.email);
       expect(list.friends[0].firstname).to.eq(user.firstname);
       done();

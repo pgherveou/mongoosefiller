@@ -73,22 +73,40 @@ var ListSchema = new Schema({
 
 var List = mongoose.model('List', ListSchema);
 
-var list, user, post;
+var list, user, user2, post;
 
 describe('mongoosefiller', function() {
 
   before(function (done) {
+    User.remove({}, done);
+  });
+
+  before(function (done) {
+    Post.remove({}, done);
+  });
+
+  before(function (done) {
+    List.remove({}, done);
+  });
+
+  before(function (done) {
     user = new User({
-      firstname: 'pierre',
-      lastname : 'herveou',
-      email    : 'myemail@gmail.com',
+      firstname: 'John',
+      lastname : 'Mcenroe',
+      email    : 'john@gmail.com',
       avatar   : 'avatar1.png'
     });
     user.save(done);
   });
 
-  after(function (done) {
-    conn.connection.db.dropDatabase(done);
+  before(function (done) {
+    user2 = new User({
+      firstname: 'Yannick',
+      lastname : 'Noah',
+      email    : 'yannick@gmail.com',
+      avatar   : 'avatar2.png'
+    });
+    user2.save(done);
   });
 
   it('should populate post.user', function (done) {
@@ -164,6 +182,25 @@ describe('mongoosefiller', function() {
     });
   });
 
+  it('should update post.user to user2', function (done) {
+    post.user._id = user2.id;
+    post.save(function() {
+      expect(post.user.id).to.eq(user2.id);
+      expect(post.user.email).to.eq(user2.email);
+      expect(post.user.firstname).to.eq(user2.firstname);
+      done();
+    });
+  });
+
+  it('should unset post.user', function (done) {
+    post.user._id = null;
+    post.save(function() {
+      expect(post.user.id).to.be.ko;
+      expect(post.user.email).to.be.ko;
+      expect(post.user.firstname).to.be.ko;
+      done();
+    });
+  });
 
 });
 

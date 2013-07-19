@@ -1,10 +1,10 @@
 {
   "name": "mongoosefiller",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "mongoose plugin, populate and keep updated references to documents in other collection.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test --check-leaks"
+    "test": "./node_modules/mocha/bin/mocha test --reporter spec --check-leaks"
   },
   "repository": {
     "type": "git",

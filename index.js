@@ -39,8 +39,6 @@ var selectFields = function (ref, select) {
   }
 };
 
-
-
 /**
  * @param  {Schema} schema
  * @param  {Object} options
@@ -102,8 +100,14 @@ module.exports = function (schema, options) {
     var id = this.get(path)
      , self = this;
 
-    if (!this.isNew) return next();
-    if (!id) return next();
+    if (!this.isModified(path)) return next();
+
+    if (!id) {
+      fields.forEach(function (field) {
+        self.set(root + field, null);
+      });
+      return next();
+    }
 
     refmodel
       .findById(id)

@@ -128,7 +128,7 @@ describe('mongoosefiller', function() {
     user.save();
     PostSchema.once('fill', function () {
       Post.findById(post.id, function (err, post) {
-        expect(err).to.be.ko;
+        expect(err).to.not.be.ko;
         expect(post.user).to.be.an('object');
         expect(post.user.email).to.eq(user.email);
         done();
@@ -145,7 +145,7 @@ describe('mongoosefiller', function() {
     });
 
     list.save(function (err) {
-      expect(err).to.be.ko;
+      expect(err).to.not.be.ko;
       expect(list.friends[0]).to.be.ok;
       expect(list.friends[0].id).to.eq(user.id);
       expect(list.friends[0].email).to.eq(user.email);
@@ -160,7 +160,7 @@ describe('mongoosefiller', function() {
 
     friendSchema.once('fill', function () {
       List.findById(list.id, function (err, list) {
-        expect(err).to.be.ko;
+        expect(err).to.not.be.ko;
         expect(list.friends[0].email).to.eq(user.email);
         done();
       });
@@ -174,7 +174,7 @@ describe('mongoosefiller', function() {
 
     PostSchema.once('fill', function () {
       Post.findById(post.id, function (err, post) {
-        expect(err).to.be.ko;
+        expect(err).to.not.be.ko;
         expect(post.user.email).to.eq(user.email);
         expect(post.user.avatar).to.eq('avatar1.png');
         done();
@@ -195,9 +195,9 @@ describe('mongoosefiller', function() {
   it('should unset post.user', function (done) {
     post.user._id = null;
     post.save(function() {
-      expect(post.user.id).to.be.ko;
-      expect(post.user.email).to.be.ko;
-      expect(post.user.firstname).to.be.ko;
+      expect(post.user.id).to.not.be.ko;
+      expect(post.user.email).to.not.be.ko;
+      expect(post.user.firstname).to.not.be.ko;
       done();
     });
   });

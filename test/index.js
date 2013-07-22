@@ -38,7 +38,7 @@ var PostSchema = new Schema({
 
 PostSchema.plugin(filler, {
   path: 'user',
-  ref : 'User',
+  ref : User,
   dest: 'Post',
   select: 'firstname lastname email avatar',
   sync: '-avatar'

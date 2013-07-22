@@ -49,7 +49,8 @@ var selectFields = function (ref, select) {
 
 module.exports = function (schema, options) {
 
-  var refmodel = mongoose.model(options.ref)
+  var refmodel = ('string' == typeof options.ref) ? mongoose.model(options.ref) : options.ref
+    , modelName = refmodel.modelName
     , refschema = refmodel.schema
     , field = {}
     , root, path, pos, sync, fields, rootEl, el = {};
@@ -89,7 +90,7 @@ module.exports = function (schema, options) {
   fields.forEach(function(name) {
     var type = refschema.paths[name].options.type;
     el[name] = {type: type};
-    if (name === '_id') el[name].ref = options.ref;
+    if (name === '_id') el[name].ref = modelName;
   });
 
   schema.add(rootEl);

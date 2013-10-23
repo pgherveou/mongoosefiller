@@ -5,13 +5,6 @@
 var mongoose = require('mongoose');
 
 /**
- * references
- */
-
-var ObjectId = mongoose.Schema.Types.ObjectId;
-
-
-/**
  * select fields from an array of string mongoose style
  *
  * @param  {Array}  ref    reference array
@@ -46,14 +39,13 @@ var selectFields = function (ref, select) {
  * @api public
  */
 
-
 module.exports = function (schema, options) {
-
-  var refmodel = ('string' == typeof options.ref) ? mongoose.model(options.ref) : options.ref
-    , modelName = refmodel.modelName
-    , refschema = refmodel.schema
-    , field = {}
-    , root, path, pos, sync, fields, rootEl, el = {};
+  var refmodel = ('string' === typeof options.ref)
+                  ? mongoose.model(options.ref)
+                  : options.ref,
+      modelName = refmodel.modelName,
+      refschema = refmodel.schema,
+      root, path, pos, sync, fields, rootEl, el = {};
 
   // normalize options
 
@@ -79,7 +71,6 @@ module.exports = function (schema, options) {
   if (!~fields.indexOf('_id')) fields.push('_id');
 
   // append fields to schema
-
   if (options.path) {
     rootEl = {};
     rootEl[options.path] = el;
@@ -96,16 +87,15 @@ module.exports = function (schema, options) {
   schema.add(rootEl);
 
   // fetch source and fill on save
-
   schema.pre('save', function (next) {
-    var id = this.get(path)
-     , self = this;
+    var id = this.get(path),
+        _this = this;
 
     if (!this.isModified(path)) return next();
 
     if (!id) {
       fields.forEach(function (field) {
-        self.set(root + field, null);
+        _this.set(root + field, null);
       });
       return next();
     }
@@ -116,7 +106,7 @@ module.exports = function (schema, options) {
       .exec(function (err, model) {
         if (!model) return;
         fields.forEach(function (field) {
-          self.set(root + field, model.get(field));
+          _this.set(root + field, model.get(field));
         });
         next();
       });
@@ -126,35 +116,35 @@ module.exports = function (schema, options) {
   sync = selectFields(fields, options.sync);
 
   // update all denormalized references when source is updated
-
   refschema.pre('save', function (next) {
-    var self = this;
+    var _this = this,
+        conditions = {},
+        updates = {};
 
     // nothing to do for fresh doc
     if (this.isNew) return next();
 
     // get updated fields
     var changed = sync.filter(function (field) {
-      return self.isDirectModified(field);
+      return _this.isDirectModified(field);
     });
 
     // nothing we care has changed
     if (!changed.length) return next();
 
     // build update query
-    var conditions = {}
-      , updates = {};
-
-    if (pos)
+    if (pos) {
       conditions[pos.replace('.$', '') + '_id'] = this.id;
-    else
+    } else {
       conditions[path] = this.id;
+    }
 
     changed.forEach(function (field) {
-      if (pos)
-        updates[pos + field] = self.get(field);
-      else
-        updates[root + field] = self.get(field);
+      if (pos) {
+        updates[pos + field] = _this.get(field);
+      } else {
+        updates[root + field] = _this.get(field);
+      }
     });
 
     // call next, to save changes
@@ -162,7 +152,7 @@ module.exports = function (schema, options) {
 
     // trigger updates
     mongoose.model(options.dest).update(conditions, updates, {multi: true}).exec(function () {
-      schema.emit('fill', self);
+      schema.emit('fill', _this);
     });
 
   });

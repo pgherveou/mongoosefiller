@@ -1,6 +1,6 @@
 {
   "name": "mongoosefiller",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "mongoose plugin, populate and keep updated references to documents in other collection.",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "mocha": "1.x",
     "chai": "1.x"
   },
-  "dependencies": {
+  "peerDependencies": {
     "mongoose": "3.x"
   }
 }

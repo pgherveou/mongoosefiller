@@ -45,13 +45,11 @@ module.exports = function (schema, options) {
                   : options.ref,
       modelName = refmodel.modelName,
       refschema = refmodel.schema,
-      root, path, pos, sync, fields, rootEl, el = {};
+      root, idPath, pos, sync, fields, rootEl, el = {};
 
   // normalize options
-
   if (options.path) {
     root = options.path + '.';
-    path = root + '_id';
 
     // add virtual id path
     schema.virtual(options.path + '.id').get(function () {
@@ -60,15 +58,19 @@ module.exports = function (schema, options) {
     });
 
   } else {
-    path = '_id';
     root = '';
   }
+
+  // id path
+  idPath =  options.id
+    ? options.id
+    : root + '_id';
 
   if (options.pos) pos = options.pos;
 
   // select fields to copy
   fields = selectFields(Object.keys(refschema.paths), options.select);
-  if (!~fields.indexOf('_id')) fields.push('_id');
+  if (!options.id && fields.indexOf('_id') === -1) fields.push('_id');
 
   // append fields to schema
   if (options.path) {
@@ -88,10 +90,10 @@ module.exports = function (schema, options) {
 
   // fetch source and fill on save
   schema.pre('save', function (next) {
-    var id = this.get(path),
+    var id = this.get(idPath),
         _this = this;
 
-    if (!this.isModified(path)) return next();
+    if (!this.isModified(idPath)) return next();
 
     if (!id) {
       fields.forEach(function (field) {
@@ -136,7 +138,7 @@ module.exports = function (schema, options) {
     if (pos) {
       conditions[pos.replace('.$', '') + '_id'] = this.id;
     } else {
-      conditions[path] = this.id;
+      conditions[idPath] = this.id;
     }
 
     changed.forEach(function (field) {

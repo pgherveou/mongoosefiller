@@ -4,13 +4,10 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = Schema.Types.ObjectId;
 
-// mongoose.set('debug', true);
-
 /**
  * connect db
  */
 
-// mongoose.set('debug', true);
 conn = mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
   if (err) throw err;
 });
@@ -46,6 +43,24 @@ PostSchema.plugin(filler, {
 
 var Post = mongoose.model('Post', PostSchema);
 
+/**
+ * Player schema
+ */
+
+var PlayerSchema = new Schema({
+  position: {type: String},
+  user: {type: ObjectId}
+});
+
+PlayerSchema.plugin(filler, {
+  id: 'user',
+  path: 'userInfo',
+  ref : 'User',
+  dest: 'Player',
+  select: 'firstname lastname avatar'
+});
+
+var Player = mongoose.model('Player', PlayerSchema);
 
 /**
  * friend schema
@@ -73,7 +88,7 @@ var ListSchema = new Schema({
 
 var List = mongoose.model('List', ListSchema);
 
-var list, user, user2, post;
+var list, user, user2, player, post;
 
 describe('mongoosefiller', function() {
 
@@ -109,6 +124,12 @@ describe('mongoosefiller', function() {
     user2.save(done);
   });
 
+
+  beforeEach(function () {
+    mongoose.set('debug', true);
+    console.log('############');
+  });
+
   it('should populate post.user', function (done) {
     post = new Post({
       user: {_id: user.id},
@@ -128,9 +149,33 @@ describe('mongoosefiller', function() {
     user.save();
     PostSchema.once('fill', function () {
       Post.findById(post.id, function (err, post) {
-        expect(err).to.not.be.ko;
         expect(post.user).to.be.an('object');
         expect(post.user.email).to.eq(user.email);
+        done();
+      });
+    });
+  });
+
+  it('should populate player.userInfo', function (done) {
+    player = new Player({
+      user: user.id,
+      position: 'forward'
+    });
+
+    player.save(function() {
+      expect(player.userInfo.firstname).to.eq(user.firstname);
+      expect(player.userInfo.lastname).to.eq(user.lastname);
+      expect(player.userInfo.avatar).to.eq(user.avatar);
+      done();
+    });
+  });
+
+  it('should update player when user is updated', function (done) {
+    user.firstname = 'Johny';
+    user.save();
+    PlayerSchema.once('fill', function () {
+      Player.findById(player.id, function (err, player) {
+        expect(player.userInfo.firstname).to.eq(user.firstname);
         done();
       });
     });

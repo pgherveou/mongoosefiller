@@ -125,10 +125,10 @@ describe('mongoosefiller', function() {
   });
 
 
-  beforeEach(function () {
-    mongoose.set('debug', true);
-    console.log('############');
-  });
+  // beforeEach(function () {
+  //   mongoose.set('debug', true);
+  //   console.log('############');
+  // });
 
   it('should populate post.user', function (done) {
     post = new Post({

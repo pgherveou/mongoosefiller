@@ -47,24 +47,24 @@ module.exports = function (schema, options) {
       refschema = refmodel.schema,
       root, idPath, pos, sync, fields, rootEl, el = {};
 
-  // normalize options
-  if (options.path) {
-    root = options.path + '.';
-
-    // add virtual id path
-    schema.virtual(options.path + '.id').get(function () {
-      var _id = this.get(options.path + '._id');
-      if (_id) return _id.toString();
-    });
-
-  } else {
-    root = '';
-  }
+  // root path
+  root = options.path
+    ? options.path + '.'
+    : '';
 
   // id path
   idPath =  options.id
     ? options.id
     : root + '_id';
+
+  // add virtual id path
+  if (options.path) {
+    schema.virtual(options.path + '.id').get(function () {
+      var _id = this.get(idPath);
+      if (_id) return _id.toString();
+    });
+  }
+
 
   if (options.pos) pos = options.pos;
 
@@ -153,8 +153,11 @@ module.exports = function (schema, options) {
     next();
 
     // trigger updates
-    mongoose.model(options.dest).update(conditions, updates, {multi: true}).exec(function () {
-      schema.emit('fill', _this);
+    mongoose
+      .model(options.dest)
+      .update(conditions, updates, {multi: true})
+      .exec(function (err) {
+      schema.emit('fill', err, _this);
     });
 
   });

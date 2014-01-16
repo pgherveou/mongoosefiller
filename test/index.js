@@ -1,14 +1,16 @@
-var mongoose = require('mongoose')
-  , filler = require('..')
-  , expect = require('chai').expect
-  , Schema = mongoose.Schema
-  , ObjectId = Schema.Types.ObjectId;
+/* global describe:true, before:true, it:true */
+
+var mongoose = require('mongoose'),
+    filler = require('..'),
+    expect = require('chai').expect,
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 /**
  * connect db
  */
 
-conn = mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
+mongoose.connect('mongodb://localhost/mongoosefiller', function (err) {
   if (err) throw err;
 });
 
@@ -133,13 +135,24 @@ describe('mongoosefiller', function() {
   it('should populate post.user', function (done) {
     post = new Post({
       user: {_id: user.id},
-      message: "some message"
+      message: 'some message'
     });
     post.save(function() {
       expect(post.user).to.be.an('object');
       expect(post.user.id).to.eq(user.id);
       expect(post.user.email).to.eq(user.email);
       expect(post.user.firstname).to.eq(user.firstname);
+      done();
+    });
+  });
+
+  it('should fail to save post when user does not exist', function (done) {
+    var post = new Post({
+      user: {_id: '000000000000000000000000'},
+      message: 'boo message'
+    });
+    post.save(function(err) {
+      expect(err).to.be.ok;
       done();
     });
   });

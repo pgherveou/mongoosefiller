@@ -106,7 +106,8 @@ module.exports = function (schema, options) {
       .findById(id)
       .select(fields.join(' '))
       .exec(function (err, model) {
-        if (!model) return;
+        if (err) return next(err);
+        if (!model) return next(new Error(modelName + ' (id:' + id + ') not found'));
         fields.forEach(function (field) {
           _this.set(root + field, model.get(field));
         });
@@ -149,9 +150,6 @@ module.exports = function (schema, options) {
       }
     });
 
-    // call next, to save changes
-    next();
-
     // trigger updates
     mongoose
       .model(options.dest)
@@ -159,6 +157,9 @@ module.exports = function (schema, options) {
       .exec(function (err) {
       schema.emit('fill', err, _this);
     });
+
+    // call next, to save changes
+    next();
 
   });
 

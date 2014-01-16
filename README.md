@@ -17,7 +17,7 @@ Just like model.populate except that data is stored in the collection instead of
 options = {
   id:     String // (optional default to path._id) path of the id of our reference model
   path:   String // (optional default to '') path to property to keep in sync with ref model
-  pos:    String // (optional) pos operator prefix used to update model in collection array
+  pos:    String // (optional) pos operator prefix used to update embedded array
   ref :   String // reference Model name (collection we are copying data from)
   dest:   String // destination Model name (collection we are copying data to)
   select: String // (optional default to all) list of space separated field to include or exclude
@@ -27,6 +27,7 @@ options = {
 
 ```js
 // examples
+
 
 var UserSchema = new Schema({
   firstname: {type: String},
